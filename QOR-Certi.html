@@ -24,7 +24,7 @@
       <label for="SAP">SAP ID</label>
       <div class="sec-2">
         <ion-icon name="file-tray-full-outline"></ion-icon>
-        <input class="pas" type="text" name="sapId" id="sap" placeholder="Enter your SAP ID" required />
+        <input class="pas" type="text" name="Text" id="sap" placeholder="Enter your SAP ID" required />
       </div>
     </div>
     <button id="submitForm">Submit</button>
@@ -32,35 +32,37 @@
   </div>
 
   <script>
-    document.getElementById('submitForm').addEventListener('click', function (event) {
-      event.preventDefault(); // Prevent form from submitting the traditional way
-
+    document.getElementById('submitForm').addEventListener('click', function () {
       // Get data from the form
       const email = document.getElementById('email').value;
-      const sapId = document.getElementById('sap').value;
+      const sap = document.getElementById('sap').value;
       const errorDiv = document.getElementById('error');
-
+      
       // Validate input
-      if (!email || !sapId) {
+      if (!email || !sap) {
         errorDiv.style.display = 'block';
         return;
       }
 
       errorDiv.style.display = 'none'; // Hide error if inputs are valid
 
-      // Create a data object
-      const formData = new FormData();
-      formData.append('email', email);
-      formData.append('sapId', sapId);
+      // Create an object with the data
+      const formData = {
+        email: email,
+        sapId: sap
+      };
 
-      // Make an AJAX request to the PHP script
-      fetch('process.php', {
+      // Send data to the Google Apps Script Web App
+      fetch('YOUR_GOOGLE_APPS_SCRIPT_WEBAPP_URL', { // Replace with your Google Apps Script URL
         method: 'POST',
-        body: formData
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(formData)
       })
-      .then(response => response.text()) // Handle the PHP response
+      .then(response => response.text())
       .then(data => {
-        alert(data); // Show success or error message from PHP script
+        alert(data); // Show success or error message from Google Apps Script
       })
       .catch(error => {
         console.error('Error:', error);
