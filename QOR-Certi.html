@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>QOR Certificate Generator</title>
+  <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+  <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
+  <link rel='stylesheet' href='https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900&display=swap'>
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+  <div class="screen-1">
+    <div style="color:white; text-align: center;">Welcome to Quest of Realms Certificate<br>Generation Software</div>
+    <div id="imgdiv"><img src="https://res.cloudinary.com/dfraqfx16/image/upload/v1702064054/icwsdohyksgpma6bvpqy.png"></div>
+    <div class="email">
+      <label for="email">Email Address</label>
+      <div class="sec-2">
+        <ion-icon name="mail-outline"></ion-icon>
+        <input type="email" name="email" id="email" placeholder="Enter your email" required />
+      </div>
+    </div>
+    <div class="SAP">
+      <label for="SAP">SAP ID</label>
+      <div class="sec-2">
+        <ion-icon name="file-tray-full-outline"></ion-icon>
+        <input class="pas" type="text" name="sapId" id="sap" placeholder="Enter your SAP ID" required />
+      </div>
+    </div>
+    <button id="submitForm">Submit</button>
+    <div id="error">Enter Correct SAP ID</div>
+  </div>
+
+  <script>
+    document.getElementById('submitForm').addEventListener('click', function (event) {
+      event.preventDefault(); // Prevent form from submitting the traditional way
+
+      // Get data from the form
+      const email = document.getElementById('email').value;
+      const sapId = document.getElementById('sap').value;
+      const errorDiv = document.getElementById('error');
+
+      // Validate input
+      if (!email || !sapId) {
+        errorDiv.style.display = 'block';
+        return;
+      }
+
+      errorDiv.style.display = 'none'; // Hide error if inputs are valid
+
+      // Create a data object
+      const formData = new FormData();
+      formData.append('email', email);
+      formData.append('sapId', sapId);
+
+      // Make an AJAX request to the PHP script
+      fetch('process.php', {
+        method: 'POST',
+        body: formData
+      })
+      .then(response => response.text()) // Handle the PHP response
+      .then(data => {
+        alert(data); // Show success or error message from PHP script
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        alert('An error occurred while processing your request.');
+      });
+    });
+  </script>
+</body>
+</html>

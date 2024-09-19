@@ -1,0 +1,122 @@
+* {
+  font-family: "Poppins";
+}
+
+body {
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+  overflow-y: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(45deg,#661C58,#362D7C);
+  height: 100vh;
+}
+
+.screen-1 {
+  padding: 2em;
+  display: flex;
+  flex-direction: column;
+  border-radius: 30px;  
+  gap: 2em;
+}
+.screen-1 .logo {
+  margin-top: -3em;
+}
+.screen-1 .email {
+  background: white;
+  padding: 1em;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+  border-radius: 20px;
+  color: #4d4d4d;
+  margin-top: -3em;
+}
+.screen-1 .email input {
+  outline: none;
+  border: none;
+}
+.screen-1 .email input::-moz-placeholder {
+  color: black;
+  font-size: 0.9em;
+}
+.screen-1 .email input:-ms-input-placeholder {
+  color: black;
+  font-size: 0.9em;
+}
+.screen-1 .email input::placeholder {
+  color: black;
+  font-size: 0.9em;
+}
+.screen-1 .email ion-icon {
+  color: #4d4d4d;
+  margin-bottom: -0.2em;
+}
+.screen-1 .SAP {
+  background: white;
+  padding: 1em;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+  border-radius: 20px;
+  color: #4d4d4d;
+}
+.screen-1 .SAP input {
+  outline: none;
+  border: none;
+}
+.screen-1 .SAP input::-moz-placeholder {
+  color: black;
+  font-size: 0.9em;
+}
+.screen-1 .SAP input:-ms-input-placeholder {
+  color: black;
+  font-size: 0.9em;
+}
+.screen-1 .SAP input::placeholder {
+  color: black;
+  font-size: 0.9em;
+}
+.screen-1 .SAP ion-icon {
+  color: #4d4d4d;
+  margin-bottom: -0.2em;
+}
+.screen-1 #submitForm {
+  padding: 1em;
+  background: linear-gradient(-45deg,#661C58,#362D7C);
+  color: white;
+  border: 0.1px solid white;
+  border-radius: 30px;
+  /* border: black; */
+  font-weight: 600;
+}
+.screen-1 .footer {
+  display: flex;
+  font-size: 0.7em;
+  color: #5e5e5e;
+  gap: 14em;
+  padding-bottom: 10em;
+}
+.screen-1 .footer span {
+  cursor: pointer;
+}
+
+button {
+  cursor: pointer;
+}
+img {
+  border-style: none;
+  height: 100px;
+  padding-bottom: 30px;
+}
+#imgdiv
+{
+  margin:auto;
+}
+#error{
+  color: red;
+  display: none;
+}
