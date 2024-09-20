@@ -7,7 +7,6 @@
   <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
   <link rel='stylesheet' href='https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900&display=swap'>
-  <link rel="stylesheet" href="./style.css">
 
   <style>
     /* Container for the form */
@@ -31,6 +30,7 @@
     .success-animation.active, .error-animation.active {
       opacity: 1;
       transform: scale(1);
+      display: block;
     }
 
     .success-animation {
@@ -50,13 +50,7 @@
       border-top: 8px solid #3498db;
       width: 60px;
       height: 60px;
-      -webkit-animation: spin 2s linear infinite;
       animation: spin 2s linear infinite;
-    }
-
-    @-webkit-keyframes spin {
-      0% { -webkit-transform: rotate(0deg); }
-      100% { -webkit-transform: rotate(360deg); }
     }
 
     @keyframes spin {
@@ -81,7 +75,6 @@
       stroke: #4caf50;
       stroke-miterlimit: 10;
       margin: 10px auto;
-      box-shadow: none;
       fill: none;
       stroke-linecap: round;
       stroke-linejoin: round;
@@ -106,7 +99,6 @@
       stroke: #f44336;
       stroke-miterlimit: 10;
       margin: 10px auto;
-      box-shadow: none;
       fill: none;
       stroke-linecap: round;
       stroke-linejoin: round;
@@ -235,12 +227,12 @@
 
         if (data.includes('Success')) {
           successDiv.classList.add('active');
-          successDiv.style.display = 'block';// Show success animation
+          successDiv.style.display = 'block'; // Show success animation
           tryAgainBtn.style.display = 'block'; // Show Try Again button
         } else {
           errorAnimationDiv.classList.add('active'); // Show error animation
           errorMsgDiv.innerText = data;
-          errorAnimationDiv.style.display = 'block';// Display the failure reason
+          errorAnimationDiv.style.display = 'block'; // Display the failure reason
           tryAgainBtn.style.display = 'block'; // Show Try Again button
         }
       })
