@@ -64,45 +64,62 @@
       100% { transform: rotate(360deg); }
     }
 
-    /* Success animation */
+    /* Status text */
+    .status-text {
+      display: none;
+      font-size: 18px;
+      color: #333;
+      margin-top: 10px;
+    }
+
+    /* Improved checkmark animation */
     .checkmark {
-      width: 56px;
-      height: 56px;
+      width: 80px;
+      height: 80px;
       display: block;
       stroke-width: 2;
       stroke: #4caf50;
       stroke-miterlimit: 10;
       margin: 10px auto;
-      box-shadow: inset 0px 0px 0px #4caf50;
-      animation: fill .4s ease-in-out .4s forwards, scale .3s ease-in-out .9s both;
+      box-shadow: none;
+      fill: none;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      animation: draw 1s ease-in-out forwards;
     }
 
-    @keyframes fill {
+    @keyframes draw {
+      0% {
+        stroke-dasharray: 0, 150;
+      }
       100% {
-        box-shadow: inset 0px 0px 0px 30px #4caf50;
-      }
-    }
-
-    @keyframes scale {
-      0%, 100% {
-        transform: none;
-      }
-      50% {
-        transform: scale(1.1);
+        stroke-dasharray: 150, 0;
       }
     }
 
     /* Cross animation */
     .cross {
-      width: 56px;
-      height: 56px;
+      width: 80px;
+      height: 80px;
       display: block;
       stroke-width: 2;
       stroke: #f44336;
       stroke-miterlimit: 10;
       margin: 10px auto;
-      box-shadow: inset 0px 0px 0px #f44336;
-      animation: fill .4s ease-in-out .4s forwards, scale .3s ease-in-out .9s both;
+      box-shadow: none;
+      fill: none;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      animation: draw-cross 1s ease-in-out forwards;
+    }
+
+    @keyframes draw-cross {
+      0% {
+        stroke-dasharray: 0, 150;
+      }
+      100% {
+        stroke-dasharray: 150, 0;
+      }
     }
 
     /* Try Again Button */
@@ -147,17 +164,24 @@
 
   <!-- Loading spinner animation -->
   <div class="loading-spinner" id="loadingSpinner"></div>
+  
+  <!-- Status text for each process step -->
+  <div class="status-text" id="statusText"></div>
 
   <!-- Success message -->
   <div class="success-animation" id="successAnimation">
     ✔️ Certificate Sent!
-    <svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52"><circle cx="26" cy="26" r="25" fill="none"/><path fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/></svg>
+    <svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+      <path fill="none" d="M14 27l7 7 16-16"/>
+    </svg>
   </div>
 
   <!-- Error message -->
   <div class="error-animation" id="errorAnimation">
     ❌ Failed to send certificate.
-    <svg class="cross" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52"><circle cx="26" cy="26" r="25" fill="none"/><path fill="none" d="M16 16L36 36M36 16L16 36"/></svg>
+    <svg class="cross" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+      <path fill="none" d="M16 16L36 36M36 16L16 36"/>
+    </svg>
     <div id="errorMsg"></div>
   </div>
 
@@ -172,6 +196,7 @@
       const errorDiv = document.getElementById('error');
       const formContainer = document.getElementById('formContainer');
       const loadingSpinner = document.getElementById('loadingSpinner');
+      const statusText = document.getElementById('statusText');
       const successDiv = document.getElementById('successAnimation');
       const errorAnimationDiv = document.getElementById('errorAnimation');
       const errorMsgDiv = document.getElementById('errorMsg');
@@ -185,10 +210,16 @@
 
       errorDiv.style.display = 'none'; // Hide error if inputs are valid
 
-      // Hide form and show loading animation
+      // Hide form and show loading animation with status text
       formContainer.style.opacity = '0';  // Fade out the form
       setTimeout(() => { formContainer.style.display = 'none'; }, 500);  // Remove the form after fade-out
       loadingSpinner.style.display = 'block';  // Show loading spinner
+      statusText.style.display = 'block'; // Show status text
+      statusText.innerText = "Fetching list...";  // First status text
+
+      // Simulate status updates during the process
+      setTimeout(() => { statusText.innerText = "Generating certificate..."; }, 2000);
+      setTimeout(() => { statusText.innerText = "Sending email..."; }, 4000);
 
       // Construct URL with query parameters for GET request
       const formDataUrl = `https://amwaveswellness.com/push2.php?email=${encodeURIComponent(email)}&sapId=${encodeURIComponent(sap)}`;  // Replace with your PHP URL
@@ -200,19 +231,23 @@
       .then(response => response.text())
       .then(data => {
         loadingSpinner.style.display = 'none'; // Hide loading spinner
-        
+        statusText.style.display = 'none'; // Hide status text
+
         if (data.includes('Success')) {
-          successDiv.classList.add('active'); // Show success animation
+          successDiv.classList.add('active');
+          successDiv.style.display = 'block';// Show success animation
           tryAgainBtn.style.display = 'block'; // Show Try Again button
         } else {
           errorAnimationDiv.classList.add('active'); // Show error animation
-          errorMsgDiv.innerText = data; // Display the failure reason
+          errorMsgDiv.innerText = data;
+          errorAnimationDiv.style.display = 'block';// Display the failure reason
           tryAgainBtn.style.display = 'block'; // Show Try Again button
         }
       })
       .catch(error => {
         console.error('Error:', error);
         loadingSpinner.style.display = 'none'; // Hide loading spinner
+        statusText.style.display = 'none'; // Hide status text
         errorAnimationDiv.classList.add('active'); // Show error animation
         errorMsgDiv.innerText = 'An error occurred while processing your request.'; // Generic error message
         tryAgainBtn.style.display = 'block'; // Show Try Again button
