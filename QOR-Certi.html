@@ -41,13 +41,27 @@
       color: red;
     }
 
-    /* Loading animation */
-    .loading {
+    /* Loading spinner */
+    .loading-spinner {
       display: none;
-      text-align: center;
       margin-top: 20px;
-      font-size: 20px;
-      color: blue;
+      border: 8px solid #f3f3f3;
+      border-radius: 50%;
+      border-top: 8px solid #3498db;
+      width: 60px;
+      height: 60px;
+      -webkit-animation: spin 2s linear infinite;
+      animation: spin 2s linear infinite;
+    }
+
+    @-webkit-keyframes spin {
+      0% { -webkit-transform: rotate(0deg); }
+      100% { -webkit-transform: rotate(360deg); }
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
     }
 
     /* Success animation */
@@ -131,8 +145,8 @@
     <div id="error" style="color: red; display: none;">Enter Correct SAP ID</div>
   </div>
 
-  <!-- Loading animation -->
-  <div class="loading" id="loading">Processing...</div>
+  <!-- Loading spinner animation -->
+  <div class="loading-spinner" id="loadingSpinner"></div>
 
   <!-- Success message -->
   <div class="success-animation" id="successAnimation">
@@ -157,7 +171,7 @@
       const sap = document.getElementById('sap').value;
       const errorDiv = document.getElementById('error');
       const formContainer = document.getElementById('formContainer');
-      const loadingDiv = document.getElementById('loading');
+      const loadingSpinner = document.getElementById('loadingSpinner');
       const successDiv = document.getElementById('successAnimation');
       const errorAnimationDiv = document.getElementById('errorAnimation');
       const errorMsgDiv = document.getElementById('errorMsg');
@@ -172,43 +186,4 @@
       errorDiv.style.display = 'none'; // Hide error if inputs are valid
 
       // Hide form and show loading animation
-      formContainer.style.opacity = '0';  // Fade out the form
-      setTimeout(() => { formContainer.style.display = 'none'; }, 500);  // Remove the form after fade-out
-      loadingDiv.style.display = 'block';
-
-      // Construct URL with query parameters for GET request
-      const formDataUrl = `https://amwaveswellness.com/push2.php?email=${encodeURIComponent(email)}&sapId=${encodeURIComponent(sap)}`;  // Replace with your PHP URL
-
-      // Send data to the PHP script using GET request
-      fetch(formDataUrl, {
-        method: 'GET'
-      })
-      .then(response => response.text())
-      .then(data => {
-        loadingDiv.style.display = 'none'; // Hide loading animation
-        
-        if (data.includes('Success')) {
-          successDiv.classList.add('active'); // Show success animation
-          tryAgainBtn.style.display = 'block'; // Show Try Again button
-        } else {
-          errorAnimationDiv.classList.add('active'); // Show error animation
-          errorMsgDiv.innerText = data; // Display the failure reason
-          tryAgainBtn.style.display = 'block'; // Show Try Again button
-        }
-      })
-      .catch(error => {
-        console.error('Error:', error);
-        loadingDiv.style.display = 'none'; // Hide loading animation
-        errorAnimationDiv.classList.add('active'); // Show error animation
-        errorMsgDiv.innerText = 'An error occurred while processing your request.'; // Generic error message
-        tryAgainBtn.style.display = 'block'; // Show Try Again button
-      });
-    });
-
-    // Reload the page when "Try Again" button is clicked
-    document.getElementById('tryAgainBtn').addEventListener('click', function() {
-      window.location.reload();
-    });
-  </script>
-</body>
-</html>
+     
