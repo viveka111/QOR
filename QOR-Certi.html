@@ -14,6 +14,7 @@
     .screen-1 {
       text-align: center;
       padding: 20px;
+      transition: opacity 0.5s ease-in-out;
     }
 
     /* Success and Error animation styles */
@@ -89,10 +90,27 @@
       box-shadow: inset 0px 0px 0px #f44336;
       animation: fill .4s ease-in-out .4s forwards, scale .3s ease-in-out .9s both;
     }
+
+    /* Try Again Button */
+    #tryAgainBtn {
+      display: none;
+      margin-top: 20px;
+      padding: 10px 20px;
+      background-color: #4caf50;
+      color: white;
+      border: none;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    #tryAgainBtn:hover {
+      background-color: #45a049;
+    }
+
   </style>
 </head>
 <body>
-  <div class="screen-1">
+  <div class="screen-1" id="formContainer">
     <div style="color:white; text-align: center;">Welcome to Quest of Realms Certificate<br>Generation Software</div>
     <div id="imgdiv"><img src="https://res.cloudinary.com/dfraqfx16/image/upload/v1702064054/icwsdohyksgpma6bvpqy.png"></div>
     <div class="email">
@@ -111,23 +129,26 @@
     </div>
     <button id="submitForm">Submit</button>
     <div id="error" style="color: red; display: none;">Enter Correct SAP ID</div>
-
-    <!-- Loading animation -->
-    <div class="loading" id="loading">Processing...</div>
-
-    <!-- Success message -->
-    <div class="success-animation" id="successAnimation">
-      ✔️ Certificate Sent!
-      <svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52"><circle cx="26" cy="26" r="25" fill="none"/><path fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/></svg>
-    </div>
-
-    <!-- Error message -->
-    <div class="error-animation" id="errorAnimation">
-      ❌ Failed to send certificate.
-      <svg class="cross" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52"><circle cx="26" cy="26" r="25" fill="none"/><path fill="none" d="M16 16L36 36M36 16L16 36"/></svg>
-      <div id="errorMsg"></div>
-    </div>
   </div>
+
+  <!-- Loading animation -->
+  <div class="loading" id="loading">Processing...</div>
+
+  <!-- Success message -->
+  <div class="success-animation" id="successAnimation">
+    ✔️ Certificate Sent!
+    <svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52"><circle cx="26" cy="26" r="25" fill="none"/><path fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/></svg>
+  </div>
+
+  <!-- Error message -->
+  <div class="error-animation" id="errorAnimation">
+    ❌ Failed to send certificate.
+    <svg class="cross" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52"><circle cx="26" cy="26" r="25" fill="none"/><path fill="none" d="M16 16L36 36M36 16L16 36"/></svg>
+    <div id="errorMsg"></div>
+  </div>
+
+  <!-- Try Again Button -->
+  <button id="tryAgainBtn">Submit Another Request</button>
 
   <script>
     document.getElementById('submitForm').addEventListener('click', function () {
@@ -135,10 +156,12 @@
       const email = document.getElementById('email').value;
       const sap = document.getElementById('sap').value;
       const errorDiv = document.getElementById('error');
+      const formContainer = document.getElementById('formContainer');
       const loadingDiv = document.getElementById('loading');
       const successDiv = document.getElementById('successAnimation');
       const errorAnimationDiv = document.getElementById('errorAnimation');
       const errorMsgDiv = document.getElementById('errorMsg');
+      const tryAgainBtn = document.getElementById('tryAgainBtn');
       
       // Validate input
       if (!email || !sap) {
@@ -148,10 +171,10 @@
 
       errorDiv.style.display = 'none'; // Hide error if inputs are valid
 
-      // Show loading animation
+      // Hide form and show loading animation
+      formContainer.style.opacity = '0';  // Fade out the form
+      setTimeout(() => { formContainer.style.display = 'none'; }, 500);  // Remove the form after fade-out
       loadingDiv.style.display = 'block';
-      successDiv.classList.remove('active');
-      errorAnimationDiv.classList.remove('active');
 
       // Construct URL with query parameters for GET request
       const formDataUrl = `https://amwaveswellness.com/push2.php?email=${encodeURIComponent(email)}&sapId=${encodeURIComponent(sap)}`;  // Replace with your PHP URL
@@ -166,9 +189,11 @@
         
         if (data.includes('Success')) {
           successDiv.classList.add('active'); // Show success animation
+          tryAgainBtn.style.display = 'block'; // Show Try Again button
         } else {
           errorAnimationDiv.classList.add('active'); // Show error animation
           errorMsgDiv.innerText = data; // Display the failure reason
+          tryAgainBtn.style.display = 'block'; // Show Try Again button
         }
       })
       .catch(error => {
@@ -176,7 +201,13 @@
         loadingDiv.style.display = 'none'; // Hide loading animation
         errorAnimationDiv.classList.add('active'); // Show error animation
         errorMsgDiv.innerText = 'An error occurred while processing your request.'; // Generic error message
+        tryAgainBtn.style.display = 'block'; // Show Try Again button
       });
+    });
+
+    // Reload the page when "Try Again" button is clicked
+    document.getElementById('tryAgainBtn').addEventListener('click', function() {
+      window.location.reload();
     });
   </script>
 </body>
