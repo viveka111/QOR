@@ -186,4 +186,43 @@
       errorDiv.style.display = 'none'; // Hide error if inputs are valid
 
       // Hide form and show loading animation
-     
+      formContainer.style.opacity = '0';  // Fade out the form
+      setTimeout(() => { formContainer.style.display = 'none'; }, 500);  // Remove the form after fade-out
+      loadingSpinner.style.display = 'block';  // Show loading spinner
+
+      // Construct URL with query parameters for GET request
+      const formDataUrl = `https://amwaveswellness.com/push2.php?email=${encodeURIComponent(email)}&sapId=${encodeURIComponent(sap)}`;  // Replace with your PHP URL
+
+      // Send data to the PHP script using GET request
+      fetch(formDataUrl, {
+        method: 'GET'
+      })
+      .then(response => response.text())
+      .then(data => {
+        loadingSpinner.style.display = 'none'; // Hide loading spinner
+        
+        if (data.includes('Success')) {
+          successDiv.classList.add('active'); // Show success animation
+          tryAgainBtn.style.display = 'block'; // Show Try Again button
+        } else {
+          errorAnimationDiv.classList.add('active'); // Show error animation
+          errorMsgDiv.innerText = data; // Display the failure reason
+          tryAgainBtn.style.display = 'block'; // Show Try Again button
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        loadingSpinner.style.display = 'none'; // Hide loading spinner
+        errorAnimationDiv.classList.add('active'); // Show error animation
+        errorMsgDiv.innerText = 'An error occurred while processing your request.'; // Generic error message
+        tryAgainBtn.style.display = 'block'; // Show Try Again button
+      });
+    });
+
+    // Reload the page when "Try Again" button is clicked
+    document.getElementById('tryAgainBtn').addEventListener('click', function() {
+      window.location.reload();
+    });
+  </script>
+</body>
+</html>
