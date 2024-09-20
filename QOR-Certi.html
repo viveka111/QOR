@@ -8,6 +8,33 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
   <link rel='stylesheet' href='https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900&display=swap'>
   <link rel="stylesheet" href="./style.css">
+
+  <style>
+    /* Success and Error animation styles */
+    .success-animation, .error-animation {
+      display: none;
+      text-align: center;
+      margin-top: 20px;
+      font-size: 24px;
+    }
+
+    .success-animation {
+      color: green;
+    }
+
+    .error-animation {
+      color: red;
+    }
+
+    /* Loading animation */
+    .loading {
+      display: none;
+      text-align: center;
+      margin-top: 20px;
+      font-size: 20px;
+      color: blue;
+    }
+  </style>
 </head>
 <body>
   <div class="screen-1">
@@ -28,7 +55,14 @@
       </div>
     </div>
     <button id="submitForm">Submit</button>
-    <div id="error">Enter Correct SAP ID</div>
+    <div id="error" style="color: red; display: none;">Enter Correct SAP ID</div>
+
+    <!-- Loading animation -->
+    <div class="loading" id="loading">Processing...</div>
+
+    <!-- Success and Error messages -->
+    <div class="success-animation" id="successAnimation">✔️ Certificate Sent!</div>
+    <div class="error-animation" id="errorAnimation">❌ Failed to send certificate.</div>
   </div>
 
   <script>
@@ -37,6 +71,9 @@
       const email = document.getElementById('email').value;
       const sap = document.getElementById('sap').value;
       const errorDiv = document.getElementById('error');
+      const loadingDiv = document.getElementById('loading');
+      const successDiv = document.getElementById('successAnimation');
+      const errorAnimationDiv = document.getElementById('errorAnimation');
       
       // Validate input
       if (!email || !sap) {
@@ -46,27 +83,32 @@
 
       errorDiv.style.display = 'none'; // Hide error if inputs are valid
 
-      // Create an object with the data
-      const formData = {
-        email: email,
-        sapId: sap
-      };
+      // Show loading animation
+      loadingDiv.style.display = 'block';
+      successDiv.style.display = 'none';
+      errorAnimationDiv.style.display = 'none';
 
-      // Send data to the Google Apps Script Web App
-      fetch('https://script.google.com/macros/s/AKfycbxO6_tUuAXzS_LkBK1xhtHl3IGSHc2-RWltJ0kIbhxWOZ26TtFsTbRwFRHwWx4dUMN_/exec', { // Replace with your Google Apps Script URL
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(formData)
+      // Construct URL with query parameters for GET request
+      const formDataUrl = `https://yourdomain.com/your_php_script.php?email=${encodeURIComponent(email)}&sapId=${encodeURIComponent(sap)}`;  // Replace with your PHP URL
+
+      // Send data to the PHP script using GET request
+      fetch(formDataUrl, {
+        method: 'GET'
       })
       .then(response => response.text())
       .then(data => {
-        alert(data); // Show success or error message from Google Apps Script
+        loadingDiv.style.display = 'none'; // Hide loading animation
+        
+        if (data.includes('Success')) {
+          successDiv.style.display = 'block'; // Show success animation
+        } else {
+          errorAnimationDiv.style.display = 'block'; // Show error animation
+        }
       })
       .catch(error => {
         console.error('Error:', error);
-        alert('An error occurred while processing your request.');
+        loadingDiv.style.display = 'none'; // Hide loading animation
+        errorAnimationDiv.style.display = 'block'; // Show error animation
       });
     });
   </script>
