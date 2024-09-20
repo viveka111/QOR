@@ -10,12 +10,26 @@
   <link rel="stylesheet" href="./style.css">
 
   <style>
+    /* Container for the form */
+    .screen-1 {
+      text-align: center;
+      padding: 20px;
+    }
+
     /* Success and Error animation styles */
     .success-animation, .error-animation {
       display: none;
       text-align: center;
       margin-top: 20px;
       font-size: 24px;
+      opacity: 0;
+      transform: scale(0.9);
+      transition: all 0.5s ease-in-out;
+    }
+
+    .success-animation.active, .error-animation.active {
+      opacity: 1;
+      transform: scale(1);
     }
 
     .success-animation {
@@ -33,6 +47,47 @@
       margin-top: 20px;
       font-size: 20px;
       color: blue;
+    }
+
+    /* Success animation */
+    .checkmark {
+      width: 56px;
+      height: 56px;
+      display: block;
+      stroke-width: 2;
+      stroke: #4caf50;
+      stroke-miterlimit: 10;
+      margin: 10px auto;
+      box-shadow: inset 0px 0px 0px #4caf50;
+      animation: fill .4s ease-in-out .4s forwards, scale .3s ease-in-out .9s both;
+    }
+
+    @keyframes fill {
+      100% {
+        box-shadow: inset 0px 0px 0px 30px #4caf50;
+      }
+    }
+
+    @keyframes scale {
+      0%, 100% {
+        transform: none;
+      }
+      50% {
+        transform: scale(1.1);
+      }
+    }
+
+    /* Cross animation */
+    .cross {
+      width: 56px;
+      height: 56px;
+      display: block;
+      stroke-width: 2;
+      stroke: #f44336;
+      stroke-miterlimit: 10;
+      margin: 10px auto;
+      box-shadow: inset 0px 0px 0px #f44336;
+      animation: fill .4s ease-in-out .4s forwards, scale .3s ease-in-out .9s both;
     }
   </style>
 </head>
@@ -60,9 +115,18 @@
     <!-- Loading animation -->
     <div class="loading" id="loading">Processing...</div>
 
-    <!-- Success and Error messages -->
-    <div class="success-animation" id="successAnimation">✔️ Certificate Sent!</div>
-    <div class="error-animation" id="errorAnimation">❌ Failed to send certificate.</div>
+    <!-- Success message -->
+    <div class="success-animation" id="successAnimation">
+      ✔️ Certificate Sent!
+      <svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52"><circle cx="26" cy="26" r="25" fill="none"/><path fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/></svg>
+    </div>
+
+    <!-- Error message -->
+    <div class="error-animation" id="errorAnimation">
+      ❌ Failed to send certificate.
+      <svg class="cross" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52"><circle cx="26" cy="26" r="25" fill="none"/><path fill="none" d="M16 16L36 36M36 16L16 36"/></svg>
+      <div id="errorMsg"></div>
+    </div>
   </div>
 
   <script>
@@ -74,6 +138,7 @@
       const loadingDiv = document.getElementById('loading');
       const successDiv = document.getElementById('successAnimation');
       const errorAnimationDiv = document.getElementById('errorAnimation');
+      const errorMsgDiv = document.getElementById('errorMsg');
       
       // Validate input
       if (!email || !sap) {
@@ -85,8 +150,8 @@
 
       // Show loading animation
       loadingDiv.style.display = 'block';
-      successDiv.style.display = 'none';
-      errorAnimationDiv.style.display = 'none';
+      successDiv.classList.remove('active');
+      errorAnimationDiv.classList.remove('active');
 
       // Construct URL with query parameters for GET request
       const formDataUrl = `https://amwaveswellness.com/push2.php?email=${encodeURIComponent(email)}&sapId=${encodeURIComponent(sap)}`;  // Replace with your PHP URL
@@ -100,15 +165,17 @@
         loadingDiv.style.display = 'none'; // Hide loading animation
         
         if (data.includes('Success')) {
-          successDiv.style.display = 'block'; // Show success animation
+          successDiv.classList.add('active'); // Show success animation
         } else {
-          errorAnimationDiv.style.display = 'block'; // Show error animation
+          errorAnimationDiv.classList.add('active'); // Show error animation
+          errorMsgDiv.innerText = data; // Display the failure reason
         }
       })
       .catch(error => {
         console.error('Error:', error);
         loadingDiv.style.display = 'none'; // Hide loading animation
-        errorAnimationDiv.style.display = 'block'; // Show error animation
+        errorAnimationDiv.classList.add('active'); // Show error animation
+        errorMsgDiv.innerText = 'An error occurred while processing your request.'; // Generic error message
       });
     });
   </script>
