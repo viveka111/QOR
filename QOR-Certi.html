@@ -222,7 +222,7 @@
       setTimeout(() => { statusText.innerText = "Sending email..."; }, 4000);
 
       // Construct URL with query parameters for GET request
-      const formDataUrl = https://amwaveswellness.com/push2.php?email=${encodeURIComponent(email)}&sapId=${encodeURIComponent(sap)};  // Replace with your PHP URL
+      const formDataUrl = `https://amwaveswellness.com/push2.php?email=${encodeURIComponent(email)}&sapId=${encodeURIComponent(sap)}`;  // Replace with your PHP URL
 
       // Send data to the PHP script using GET request
       fetch(formDataUrl, {
